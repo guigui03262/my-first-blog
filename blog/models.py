@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Post(models.Model):
@@ -10,14 +11,27 @@ class Post(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
     views = models.BigIntegerField(default=0)
-    likes = models.BigIntegerField(default=0)
 
     def publish(self):
         self.published_date = timezone.now()
         self.save()
 
+    def approved_comments(self):
+        return self.comments.filter(approved_comment=True)
+
+    def likes_count(self):
+        return PostLike.objects.filter(post=self).count()
+
     def __str__(self):
-        return self.title
+        return '{} - {}'.format(self.title, self.author)
+
+class PostLike(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    post = models.ForeignKey('blog.Post',on_delete=models.CASCADE)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return '{} - {}'.format(self.post.title, self.user)
 
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', on_delete=models.CASCADE, related_name='comments')
@@ -32,6 +46,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
-        
-def approved_comments(self):
-    return self.comments.filter(approved_comment=True)

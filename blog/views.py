@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-from .models import Post, Comment
+from .models import Post, Comment, PostLike
 from django.shortcuts import render, get_object_or_404
 from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
@@ -16,8 +16,18 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.views += 1
     post.save()
+    liked = False
+    if request.user.is_authenticated:
+        likes_count = PostLike.objects.filter(
+            post_id=pk,
+            user=request.user
+            ).count()
+        if likes_count>0:
+            liked = True
+        else:
+            liked = False
 
-    return render(request, 'blog/post_detail.html', {'post': post})
+    return render(request, 'blog/post_detail.html', {'post': post, 'liked': liked})
 
 @login_required
 def post_new(request):
@@ -72,11 +82,12 @@ def post_remove(request, pk):
 
 @login_required
 def post_like(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    post.likes += 1
-    post.save()
+    post_like, created = PostLike.objects.get_or_create(
+        post_id=pk,
+        user=request.user
+    )
 
-    return redirect('post_detail', pk=post.pk)
+    return redirect('post_detail', pk=pk)
 
 @login_required
 def add_comment_to_post(request, pk):

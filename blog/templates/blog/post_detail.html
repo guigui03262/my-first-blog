@@ -16,11 +16,15 @@
         <h2>{{ post.title }}</h2>
         <p>{{ post.text|linebreaksbr }}</p>
         <div class="date">
-        {{post.views}} views
-        <a href="{% url 'post_like' pk=post.pk%}">
-        <span class="glyphicon glyphicon-thumbs-up liked"></span>
+        {{post.views}} views &nbsp; | &nbsp;
+        <a href="{% url 'post_like' pk=post.pk %}">
+            {% if liked %}
+        <span class="glyphicon glyphicon-thumbs-up" style=color:pink;></span>
+            {% else %}
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+            {% endif %}
         </a>
-        {{post.likes}}
+        {{post.likes_count}} &nbsp; | &nbsp;
         </div>
     </div>
     <hr>
