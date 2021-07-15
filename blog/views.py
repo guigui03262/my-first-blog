@@ -1,12 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import Post, Comment, PostLike, PostDislike
-from django.shortcuts import render, get_object_or_404
-from .forms import PostForm, CommentForm
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
-
+from users.forms import CustomUserChangeForm
+from .models import Post, Comment, PostLike, PostDislike
+from .forms import PostForm, CommentForm
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date') 
@@ -129,3 +128,31 @@ def post_dislike(request, pk):
         post_dislike, created = PostDislike.objects.get_or_create(post_id=pk, user=request.user)
 
     return redirect('post_detail', pk=pk)
+
+@login_required
+def user_list(request):
+    UserModel = get_user_model()
+    users = UserModel.objects.all().order_by('birth_date')
+
+    return render(request, 'blog/user_list.html', {'users': users})
+
+@login_required
+def user_remove(request, pk):
+    UserModel = get_user_model()
+    user = get_object_or_404(UserModel, pk=pk)
+    user.delete()
+
+    return redirect('user_list')
+
+@login_required
+def user_edit(request, pk):
+    UserModel = get_user_model()
+    user = get_object_or_404(UserModel, pk=pk)
+    if request.method == "POST":
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_list')
+    else:
+        form = CustomUserChangeForm(instance=user)
+    return render(request, 'blog/user_edit.html', {'form': form})
