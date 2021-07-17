@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 </head>
 <body>
-    <h1>TESTES</h1>
     <div class="page-header">
         {% if user.is_authenticated %}
         <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
         <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
         <a href="{% url 'tag_new' %}" class="top-menu"><span class="glyphicon glyphicon-tag"></span></a>
-        <p class="top-menu">E AI MEU CONSAGRADO {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
+        <a href="{% url 'user_list' %}" class="top-menu"><span class="glyphicon glyphicon-user" ></span></a>
+        <p class="top-menu"> E AI MEU CONSAGRADO  {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
         {% else %}
         <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
         <a href="{% url 'signup' %}" class="top-menu"><span class="glyphicon glyphicon-user"></span></a>
         {% endif %}
-        <h1><a href="/"> QWE QWE</a></h1>
+        <h1><a href="/"><span class="glyphicon glyphicon-home"> BLOGÃO </a></h1>
     </div>
     <div class="content container">
         <div class="row">
@@ -28,10 +28,7 @@
                 {% endblock %}
             </div>
             <div class="col-md-9">
-                <a href="{% url 'polls:index'%}"><h1>Participe do DeAdPooL</h1></a>
-            </div>
-            <div style="text-align:center" class="col-xl">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/vbjKEnmnx8M" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <a href="{% url 'polls:index' %}"><h1>Participe do DeAdPooL</h1></a>
             </div>
         </div>
     </div>
