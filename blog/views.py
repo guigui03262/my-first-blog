@@ -2,10 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-
 from users.forms import CustomUserChangeForm
-from .models import Post, Comment, PostLike, PostDislike
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, TagForm
+from .models import Post, Comment, PostLike, PostDislike, Tag
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date') 
@@ -45,11 +44,12 @@ def post_detail(request, pk):
 @login_required
 def post_new(request):
      if request.method == "POST":
-         form = PostForm(request.POST)
+         form = PostForm(request.POST, request.FILES)
          if form.is_valid():
              post = form.save(commit=False)
              post.author = request.user
              post.save()
+             form.save_m2m()
              return redirect('post_detail', pk=post.pk)
      else:
          form = PostForm()
@@ -59,11 +59,12 @@ def post_new(request):
 def post_edit(request, pk):
      post = get_object_or_404(Post, pk=pk)
      if request.method == "POST":
-         form = PostForm(request.POST, instance=post)
+         form = PostForm(request.POST, request.FILES, instance=post)
          if form.is_valid():
              post = form.save(commit=False)
              post.author = request.user
              post.save()
+             form.save_m2m()
              return redirect('post_detail', pk=post.pk)
      else:
          form = PostForm(instance=post)
@@ -155,4 +156,23 @@ def user_edit(request, pk):
             return redirect('user_list')
     else:
         form = CustomUserChangeForm(instance=user)
+
     return render(request, 'blog/user_edit.html', {'form': form})
+ 
+def tag_new(request):
+    if request.method == 'POST':
+        form = TagForm(request.POST)
+        if form.is_valid():
+            tag = form.save()
+            posts = form.cleaned_data['posts']
+            for post in posts:
+                tag.post_set.add(post)
+        return redirect('tag_list')
+    else:
+        form = TagForm()
+    return render(request, 'blog/tag_edit.html', {'form': form})
+
+def tag_list(request):
+    tags = Tag.objects.all()
+
+    return render(request, 'blog/tag_list.html', {'tags': tags})

@@ -16,13 +16,25 @@
     {% endif %}
     
     <h2>{{ post.title }}</h2>
+    <p>
+        {% if post.cover %}
+        <img src="{{ post.cover.url }}" alt=" {{ post.title }}" style="max-width: 400px;" />
+        {% else %}
+    </p>
+        {% endif %}
     <p>{{ post.text|linebreaksbr }}</p>
-
+    <p>
+        {% if post.attachment %}
+        <a href="{{ post.attachment.url }} "download>Attachment!</a>
+        {% else %}
+    </p>
+        {% endif %}
+        
     <div class="date heart">
             {{ post.views}} views &nbsp; | &nbsp; 
             <a href="{% url 'post_like' pk=post.pk %}">
                 {% if liked %}
-                     <span class="glyphicon glyphicon-thumbs-up liked"></span>
+                    <span class="glyphicon glyphicon-thumbs-up liked"></span>
                 {% else %}
                     <span class="glyphicon glyphicon-thumbs-up"></span>
                 {% endif %} 
@@ -31,7 +43,7 @@
             &nbsp; -- &nbsp; 
             <a href="{% url 'post_dislike' pk=post.pk %}">
                {% if disliked %}
-                     <span class="glyphicon glyphicon-thumbs-down liked"></span>
+                    <span class="glyphicon glyphicon-thumbs-down liked"></span>
                 {% else %}
                     <span class="glyphicon glyphicon-thumbs-down"></span>
                 {% endif %}
@@ -39,7 +51,16 @@
             &nbsp; | &nbsp; 
             {{ percent|floatformat:2 }} %
         </div>
-    </div>
+        <div class="date heart"> 
+            <h3>Tags</h3>
+
+            {% for tag in post.tags.all %}
+                {{ tag }}
+            {% empty %}
+                no tags =/
+            {% endfor %}
+        </div>
+</div>
     
     <hr>
     <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>

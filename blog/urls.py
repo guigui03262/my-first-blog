@@ -18,4 +18,6 @@ urlpatterns = [
     path('users/', views.user_list, name='user_list'),
     path('user/<pk>/edit/', views.user_edit, name='user_edit'),
     path('user/<pk>/remove/', views.user_remove, name='user_remove'),
+    path('tag/new/', views.tag_new, name='tag_new'),
+    path('tags/', views.tag_list, name='tag_list'),
 ]

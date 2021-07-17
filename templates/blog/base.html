@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 </head>
 <body>
+    <h1>TESTES</h1>
     <div class="page-header">
         {% if user.is_authenticated %}
         <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
         <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
+        <a href="{% url 'tag_new' %}" class="top-menu"><span class="glyphicon glyphicon-tag"></span></a>
         <p class="top-menu">E AI MEU CONSAGRADO {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
         {% else %}
         <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
@@ -21,7 +23,7 @@
     </div>
     <div class="content container">
         <div class="row">
-            <div class="col-md-12" style="border-bottom: 5px solid #993977;">
+            <div class="col-md-12" style="border-bottom: 3px solid #993977;">
                 {% block content %}
                 {% endblock %}
             </div>
