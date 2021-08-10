@@ -13,7 +13,9 @@ class Post(models.Model):
     views = models.BigIntegerField(default = 0)
     cover = models.ImageField(blank=True, default=None, upload_to='imagens/%Y/%m' )
     attachment = models.FileField(blank=True, default=None, upload_to='files/')
+
     tags = models.ManyToManyField('blog.Tag')
+
 
     def publish(self):
         self.published_date = timezone.now()

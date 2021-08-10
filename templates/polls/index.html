@@ -1,14 +1,17 @@
 {% extends 'blog/base.html' %}
 
-{% block content %}
+{% block conteudo %}
 
 {% if latest_question_list %}
+    <h2 align="center">Enquetes!</h2>
+    <hr>
     <ul>
     {% for question in latest_question_list %}
         <h2><a href="{% url 'polls:detail' question.id %}"><span class="glyphicon glyphicon-screenshot" ></span>  {{ question.question_text }}</a></h2>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No polls are available.</p>
+    <p>Sem enquetes no momento</p>
 {% endif %}
 {% endblock %}
+

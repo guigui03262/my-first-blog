@@ -1,22 +1,21 @@
 {% extends "blog/base.html" %}
 
-{% block content %}
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+{% load crispy_forms_tags %}
 
-<div class="container">
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
+{% block conteudo %}
+    <div class="col mb-4 p-4 shadow bg-light">
+  {% if form.errors %}
+    <p>Usuário e senha incorretos. Tente novamente..</p>
+  {% endif %}
 
-    {{ form.as_p }}
-    
-    <input type="submit" name="" value="login" />
-</form>
-<br />
-<a href="{% url 'password_reset' %}">
-    Forgot your password?
-</a>
-</div>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {{ form|crispy }}
 
+      <button type="submit" class="btn btn-success shadow my-4">Entrar</button>
+      <a href="{% url 'signup' %}" class="btn btn-primary">Criar usuário</a>
+      <a href="{% url 'password_reset' %}">Esqueci meu usuário/senha</a>
+      <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+    </div>
 {% endblock %}
