@@ -2,6 +2,7 @@
 
 {% block conteudo %}
 	<h2>Users</h2>
+	<h5><small>Quantidade de usuários: <strong><span id="num_users"></span></strong></small></h5>
 	<br />
 	{% for user in users %}
 		<div class="post">
@@ -23,4 +24,8 @@
     {% empty %}
     	<h2>Strange, no users =/</h2>
     {% endfor %}
+
+    <button id="hide">Hide</button>
+	<button id="show">Show</button>
 {% endblock %}
+

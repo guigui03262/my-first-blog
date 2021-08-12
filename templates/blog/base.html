@@ -14,6 +14,8 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/global.js' %}"></script>
     {% block css %} {% endblock %}
 </head>
 <body>
@@ -39,7 +41,10 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{% url 'post_new' %}">Criar Critica</a>
+          {% if user.is_superuser %}
           <a class="dropdown-item" href="{% url 'post_draft_list' %}">Postar Critica</a>
+          {% endif %}
+          
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Tags
@@ -56,8 +61,7 @@
           {{ user.username }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Perfil</a>
-          <a class="dropdown-item" href="{% url 'user_list' %}">Usuarios</a>
+          <a class="dropdown-item" href="{% url 'user_edit' pk=user.pk %}">Perfil</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
         </div>
@@ -70,6 +74,16 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{% url 'login' %}">Login</a>
           <a class="dropdown-item" href="{% url 'signup' %}">Registro</a>
+      </li>
+      {% endif %}
+      {% if user.is_superuser %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          ADM
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Teste</a>
+          <a class="dropdown-item" href="{% url 'user_list' %}">Usuarios</a>
       </li>
       {% endif %}
     </ul>
